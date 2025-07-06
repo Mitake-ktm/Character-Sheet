@@ -9,7 +9,7 @@ export const characters = [
         details: {
             age: "16 ans",
             size: "1m71",
-            personnalité: ["Introverti","Curieux","Tourmenté"]
+            personnality: ["Introverti","Curieux","Tourmenté"]
         }
     }
 ]

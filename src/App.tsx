@@ -1,26 +1,10 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { CharacterCard } from "./components/CharacterCard"
+import { characters } from "./data/characters"
 
-function App() {
+export default function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="min-h-screen bg-gradient-to-br from-purple-200 to-blue-100 dark:from-neutral-900 dark:to-neutral-800 flex items-center justify-center p-4">
+      <CharacterCard character={characters[0]} />
     </div>
-  );
+  )
 }
-
-export default App;
