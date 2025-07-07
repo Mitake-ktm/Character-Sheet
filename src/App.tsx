@@ -1,10 +1,10 @@
-import { CharacterCard } from "./components/CharacterCard"
-import { characters } from "./data/characters"
+import { CharactersList } from "./components/CharactersList"
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-200 to-blue-100 dark:from-neutral-900 dark:to-neutral-800 flex items-center justify-center p-4">
-      <CharacterCard character={characters[0]} />
-    </div>
+    <main className="min-h-screen bg-neutral-950 text-white">
+      <h1 className="text-3xl font-bold text-center py-8">Personnages</h1>
+      <CharactersList />
+    </main>
   )
 }
