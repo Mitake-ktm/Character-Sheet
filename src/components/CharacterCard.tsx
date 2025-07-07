@@ -36,12 +36,21 @@ export function CharacterCard({ character }: Props) {
   return (
     <>
       <div
-        className="w-72 h-96 perspective border-2 border-purple-500 rounded-2xl cursor-pointer hover:shadow-[0_0_25px_rgba(168,85,247,0.8)] transition-shadow duration-300"
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
-        onClick={() => setFlipped(!flipped)}
-        ref={cardRef}
-      >
+      className="w-72 h-96 perspective border-2 rounded-2xl cursor-pointer transition-shadow duration-300"
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      onClick={() => setFlipped(!flipped)}
+      ref={cardRef}
+      style={{
+        borderColor: character.color,
+        boxShadow: `0 0 0 rgba(0,0,0,0)`,
+      }}
+      onMouseEnter={() => {
+        if (cardRef.current)
+          cardRef.current.style.boxShadow = `0 0 25px ${character.color}`
+      }}
+    >
+
         <motion.div
           animate={{
             rotateX: rotate.x,
