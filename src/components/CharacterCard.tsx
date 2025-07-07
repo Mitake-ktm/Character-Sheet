@@ -1,74 +1,96 @@
-import { motion, useMotionValue, useTransform } from "framer-motion"
-import { useRef, useState } from "react"
+import { useState, useRef } from "react"
+import { motion } from "framer-motion"
+import Modal from "./Modal"
+import type { characters } from "../data/characters"
 
 type Props = {
-  character: typeof import("../data/characters").characters[0]
+  character: typeof characters[0]
 }
 
 export function CharacterCard({ character }: Props) {
   const [flipped, setFlipped] = useState(false)
+  const [showModal, setShowModal] = useState(false)
+  const [rotate, setRotate] = useState({ x: 0, y: 0 })
   const cardRef = useRef<HTMLDivElement>(null)
 
-  const x = useMotionValue(150)
-  const y = useMotionValue(150)
-
-  const rotateX = useTransform(y, [0, 300], [8, -8])
-  const rotateY = useTransform(x, [0, 300], [-8, 8])
-
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (flipped) return
+    const card = cardRef.current
+    if (!card) return
 
-    const rect = cardRef.current?.getBoundingClientRect()
-    if (!rect) return
+    const rect = card.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+    const centerX = rect.width / 2
+    const centerY = rect.height / 2
 
-    const posX = e.clientX - rect.left
-    const posY = e.clientY - rect.top
-    x.set(posX)
-    y.set(posY)
+    const rotateX = ((y - centerY) / centerY) * -10
+    const rotateY = ((x - centerX) / centerX) * 10
+
+    setRotate({ x: rotateX, y: rotateY })
   }
 
   const handleMouseLeave = () => {
-    if (flipped) return
-    x.set(150)
-    y.set(150)
+    setRotate({ x: 0, y: 0 })
   }
 
   return (
-    <div
-      ref={cardRef}
-      className="w-72 h-96 perspective cursor-pointer"
-      onClick={() => setFlipped(!flipped)}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-    >
-      <motion.div
-        animate={{ rotateY: flipped ? 180 : 0 }}
-        transition={{ duration: 0.6, ease: "easeInOut" }}
-        style={{
-          transformStyle: "preserve-3d",
-          rotateX: flipped ? 0 : rotateX,
-          rotateY: flipped ? 0 : rotateY,
-        }}
-        className="relative w-full h-full"
+    <>
+      <div
+        className="w-72 h-96 perspective border-2 border-purple-500 rounded-2xl cursor-pointer hover:shadow-[0_0_25px_rgba(168,85,247,0.8)] transition-shadow duration-300"
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        onClick={() => setFlipped(!flipped)}
+        ref={cardRef}
       >
-        {/* Front side */}
-        <div className="absolute w-full h-full bg-white/90 dark:bg-neutral-800/90 border border-purple-200 dark:border-purple-800 rounded-2xl shadow-2xl p-4 backface-hidden flex flex-col items-center justify-center">
-          <img src={character.image} alt={character.name} className="w-24 h-24 rounded-full object-cover border-4 border-purple-300 dark:border-purple-600" />
-          <h2 className="text-2xl mt-4 font-bold text-purple-700 dark:text-purple-300 tracking-wide">{character.name}</h2>
-          <p className="text-sm text-purple-600 dark:text-purple-400 italic">{character.title}</p>
-          <p className="mt-4 italic text-center px-2 text-neutral-700 dark:text-neutral-300">« {character.quote} »</p>
-        </div>
+        <motion.div
+          animate={{
+            rotateX: rotate.x,
+            rotateY: (flipped ? 180 : 0) + rotate.y,
+          }}
+          transition={{ type: "spring", stiffness: 200, damping: 15 }}
+          className="relative w-full h-full"
+          style={{ transformStyle: "preserve-3d" }}
+        >
+          {/* Front Face */}
+          <div className="absolute w-full h-full bg-white dark:bg-neutral-800 rounded-2xl shadow-xl p-4 backface-hidden flex flex-col items-center justify-center">
+            <img src={character.image} alt={character.name} className="w-24 h-24 rounded-full object-cover" />
+            <h2 className="text-xl mt-4 font-bold">{character.name}</h2>
+            <p className="text-sm text-purple-600 dark:text-purple-400">{character.title}</p>
+            <p className="mt-4 italic text-center">« {character.quote} »</p>
+          </div>
 
-        {/* Back side */}
-        <div className="absolute w-full h-full bg-purple-100 dark:bg-neutral-900 border border-purple-200 dark:border-purple-800 rounded-2xl shadow-2xl p-4 rotate-y-180 backface-hidden flex flex-col justify-center">
-          <p className="text-sm text-center italic text-neutral-800 dark:text-neutral-200">{character.description}</p>
-          <ul className="mt-4 text-sm text-neutral-700 dark:text-neutral-300 space-y-1">
-            <li><strong>Âge :</strong> {character.details.age}</li>
-            <li><strong>Taille :</strong> {character.details.size}</li>
-            <li><strong>Personnalité :</strong> {character.details.personnality.join(", ")}</li>
-          </ul>
-        </div>
-      </motion.div>
-    </div>
+          {/* Back Face */}
+          <div className="absolute w-full h-full bg-purple-100 dark:bg-neutral-900 rounded-2xl shadow-xl p-4 rotate-y-180 backface-hidden flex flex-col justify-between">
+            <div>
+              <p className="text-sm text-center">{character.description}</p>
+              <ul className="mt-4 text-sm">
+                <li>Âge : {character.details.age}</li>
+                <li>Taille : {character.details.size}</li>
+                <li>Personnalité : {character.details.personnality.join(", ")}</li>
+              </ul>
+            </div>
+            <button
+              className="mt-4 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm"
+              onClick={(e) => {
+                e.stopPropagation()
+                setShowModal(true)
+              }}
+            >
+              Voir plus
+            </button>
+          </div>
+        </motion.div>
+      </div>
+
+      <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+        <h2 className="text-xl font-bold mb-2">{character.name}</h2>
+        <p className="mb-4">{character.description}</p>
+        <ul className="text-sm space-y-1">
+          <li><strong>Âge :</strong> {character.details.age}</li>
+          <li><strong>Taille :</strong> {character.details.size}</li>
+          <li><strong>Personnalité :</strong> {character.details.personnality.join(", ")}</li>
+        </ul>
+      </Modal>
+    </>
   )
 }
