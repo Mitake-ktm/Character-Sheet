@@ -27,4 +27,18 @@ export const characters = [
         },
         color: "#FFFFFF"
     },
+    {
+    name: "Gekidō",
+    title: "L’Esprit de la Colère",
+    quote: "Le feu qui brûle en moi ne connaît aucun repos.",
+    image: "/images/Gekido.png",
+    description:
+      "Gekidō est une incarnation vivante de la colère et de la passion brute. Son regard enflammé reflète une histoire de conflits intérieurs non résolus.",
+    details: {
+      age: "???",
+      size: "1m82",
+      personnality: ["Impulsif", "Colérique", "Intense"],
+    },
+    color: "#e53935",
+  },
 ]
