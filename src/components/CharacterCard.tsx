@@ -58,12 +58,15 @@ export function CharacterCard({ character }: Props) {
 
   return (
     <>
-      <div
+      <motion.div
         className="relative w-72 h-96 perspective rounded-3xl cursor-pointer overflow-hidden"
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         onClick={() => setFlipped(!flipped)}
         ref={cardRef}
+        initial={{ opacity: 0, y: 40, scale: 0.9 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
         style={{
           border: `3px solid ${character.color}`,
           boxShadow: `0 0 0 rgba(0,0,0,0)`,
@@ -77,28 +80,28 @@ export function CharacterCard({ character }: Props) {
       >
         {showParticles && (
           <Particles
-          id="tsparticles"
-          init={particlesInit}
-          options={{
-            fullScreen: { enable: false },
-            background: { color: "transparent" },
-            particles: {
-              number: { value: character.particle?.number ?? 15 },
-              size: { value: character.particle?.size ?? 3 },
-              color: { value: character.color },
-              move: { enable: true, speed: character.particle?.speed ?? 0.8 },
-              opacity: { value: character.particle?.opacity ?? 0.4 },
-              shape: { type: character.particle?.shape ?? "circle" },
-            },
-          }}
-          style={{
-            position: "absolute",
-            width: "100%",
-            height: "100%",
-            pointerEvents: "none",
-            zIndex: 1,
-          }}
-        />
+            id="tsparticles"
+            init={particlesInit}
+            options={{
+              fullScreen: { enable: false },
+              background: { color: "transparent" },
+              particles: {
+                number: { value: character.particle?.number ?? 15 },
+                size: { value: character.particle?.size ?? 3 },
+                color: { value: character.color },
+                move: { enable: true, speed: character.particle?.speed ?? 0.8 },
+                opacity: { value: character.particle?.opacity ?? 0.4 },
+                shape: { type: character.particle?.shape ?? "circle" },
+              },
+            }}
+            style={{
+              position: "absolute",
+              width: "100%",
+              height: "100%",
+              pointerEvents: "none",
+              zIndex: 1,
+            }}
+          />
         )}
 
         <motion.div
@@ -112,23 +115,42 @@ export function CharacterCard({ character }: Props) {
         >
           {/* Front */}
           <div className="absolute w-full h-full bg-white/90 dark:bg-neutral-900/90 rounded-2xl p-4 backface-hidden flex flex-col items-center justify-center z-10">
-            <img
+            <motion.img
               src={character.image}
               alt={character.name}
               className="w-24 h-24 rounded-full object-cover border-4"
               style={{ borderColor: character.color }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1, duration: 0.5 }}
             />
-            <h2 className="text-xl mt-4 font-bold font-['Zen_Maru_Gothic']">{character.name}</h2>
-            <p className="text-sm" style={{ color: character.color }}>{character.title}</p>
+            <motion.h2
+              className="text-xl mt-4 font-bold font-['Zen_Maru_Gothic']"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+            >
+              {character.name}
+            </motion.h2>
+            <motion.p
+              className="text-sm"
+              style={{ color: character.color }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.5 }}
+            >
+              {character.title}
+            </motion.p>
             <motion.p
               className="mt-4 italic text-center text-neutral-600 dark:text-neutral-300"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.6 }}
+              transition={{ delay: 0.7, duration: 0.5 }}
             >
               « {character.quote} »
             </motion.p>
           </div>
+
 
           {/* Back */}
           <div className="absolute w-full h-full bg-gradient-to-tr from-purple-200 via-pink-200 to-blue-200 dark:from-neutral-800 dark:via-neutral-700 dark:to-neutral-900 rounded-2xl p-4 rotate-y-180 backface-hidden flex flex-col justify-between z-10">
@@ -161,7 +183,7 @@ export function CharacterCard({ character }: Props) {
             </button>
           </div>
         </motion.div>
-      </div>
+      </motion.div>
 
       <AnimatePresence>
         {showModal && (
