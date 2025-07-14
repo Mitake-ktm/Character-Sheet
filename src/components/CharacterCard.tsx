@@ -238,6 +238,26 @@ export function CharacterCard({ character }: Props) {
                   </span>
                 ))}
               </div>
+
+              {character.details.skills && character.details.skills.length > 0 && (
+              <div className="mt-4">
+                <h3 className="text-sm font-semibold mb-2">Compétences</h3>
+                <ul className="flex flex-wrap gap-2">
+                  {character.details.skills.map((skill) => (
+                    <li
+                      key={skill}
+                      className="bg-neutral-200 dark:bg-neutral-700 text-sm px-3 py-1 rounded-full"
+                      style={{
+                      backgroundColor: character.color,
+                      color: getContrastColor(character.color),
+                    }}
+                    >
+                      {skill}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
             </motion.div>
           </Modal>
         )}

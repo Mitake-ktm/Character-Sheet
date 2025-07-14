@@ -11,7 +11,8 @@ export const characters = [
         details: {
             age: "16 ans",
             size: "1m71",
-            personnality: ["Introverti","Curieux","Tourmenté"]
+            personnality: ["Introverti","Curieux","Tourmenté"],
+            skills: ["Aucun"]
         },
         particle: {
           shape: "circle",
@@ -32,7 +33,8 @@ export const characters = [
         details: {
             age: "???",
             size: "1m90",
-            personnality: ["Baguareur","Cherche le défi"]
+            personnality: ["Baguareur","Cherche le défi"],
+            skills: ["Maitrise de l'épée"]
         },
         color: "#FFFFFF",
         particle: {
@@ -56,6 +58,7 @@ export const characters = [
       age: "???",
       size: "1m82",
       personnality: ["Impulsif", "Colérique", "Intense"],
+      skills: ["Feu infini"]
     },
     particle: {
           shape: "triangle",
