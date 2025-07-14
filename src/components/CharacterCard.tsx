@@ -151,7 +151,6 @@ export function CharacterCard({ character }: Props) {
             </motion.p>
           </div>
 
-
           {/* Back */}
           <div className="absolute w-full h-full bg-gradient-to-tr from-purple-200 via-pink-200 to-blue-200 dark:from-neutral-800 dark:via-neutral-700 dark:to-neutral-900 rounded-2xl p-4 rotate-y-180 backface-hidden flex flex-col justify-between z-10">
             <div className="text-sm text-neutral-800 dark:text-neutral-200">
@@ -159,8 +158,21 @@ export function CharacterCard({ character }: Props) {
               <ul className="mt-4 space-y-1">
                 <li>Âge : {character.details.age}</li>
                 <li>Taille : {character.details.size}</li>
-                <li>Personnalité : {character.details.personnality.join(", ")}</li>
               </ul>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {character.details.personnality.map((trait) => (
+                  <span
+                    key={trait}
+                    className="px-2 py-1 text-xs rounded-full font-medium"
+                    style={{
+                      backgroundColor: character.color,
+                      color: getContrastColor(character.color),
+                    }}
+                  >
+                    {trait}
+                  </span>
+                ))}
+              </div>
             </div>
             <button
               className="mt-4 px-4 py-2 rounded-full text-sm transition-colors shadow"
@@ -208,11 +220,24 @@ export function CharacterCard({ character }: Props) {
                 />
               )}
               <p className="mb-4">{character.description}</p>
-              <ul className="text-sm space-y-1">
+              <ul className="text-sm space-y-1 mb-2">
                 <li><strong>Âge :</strong> {character.details.age}</li>
                 <li><strong>Taille :</strong> {character.details.size}</li>
-                <li><strong>Personnalité :</strong> {character.details.personnality.join(", ")}</li>
               </ul>
+              <div className="flex flex-wrap gap-2">
+                {character.details.personnality.map((trait) => (
+                  <span
+                    key={trait}
+                    className="px-2 py-1 text-xs rounded-full font-medium"
+                    style={{
+                      backgroundColor: character.color,
+                      color: getContrastColor(character.color),
+                    }}
+                  >
+                    {trait}
+                  </span>
+                ))}
+              </div>
             </motion.div>
           </Modal>
         )}
