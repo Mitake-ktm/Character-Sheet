@@ -27,6 +27,26 @@ function darkenColor(hex: string, amount: number): string {
   return `rgb(${r}, ${g}, ${b})`
 }
 
+const flipSound = new Audio("/sounds/flip.mp3")
+const modalSound = new Audio("/sounds/modal.mp3")
+
+function fadeOutAudio(audio: HTMLAudioElement, duration = 500) {
+  const step = 50
+  const volumeStep = audio.volume / (duration / step)
+
+  const fade = setInterval(() => {
+    if (audio.volume - volumeStep > 0) {
+      audio.volume -= volumeStep
+    } else {
+      audio.volume = 0
+      audio.pause()
+      audio.currentTime = 0
+      clearInterval(fade)
+    }
+  }, step)
+}
+
+
 export function CharacterCard({ character }: Props) {
   const [flipped, setFlipped] = useState(false)
   const [showModal, setShowModal] = useState(false)
@@ -62,7 +82,12 @@ export function CharacterCard({ character }: Props) {
         className="relative w-72 h-96 perspective rounded-3xl cursor-pointer overflow-hidden"
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
-        onClick={() => setFlipped(!flipped)}
+        onClick={() => {
+        setFlipped(!flipped)
+        flipSound.currentTime = 0
+        flipSound.play()
+        }}
+
         ref={cardRef}
         initial={{ opacity: 0, y: 40, scale: 0.9 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -177,8 +202,11 @@ export function CharacterCard({ character }: Props) {
             <button
               className="mt-4 px-4 py-2 rounded-full text-sm transition-colors shadow"
               onClick={(e) => {
-                e.stopPropagation()
-                setShowModal(true)
+              e.stopPropagation()
+              setShowModal(true)
+              modalSound.volume = 1
+              modalSound.currentTime = 0
+              modalSound.play()
               }}
               style={{
                 backgroundColor: character.color,
@@ -199,7 +227,13 @@ export function CharacterCard({ character }: Props) {
 
       <AnimatePresence>
         {showModal && (
-          <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+          <Modal
+            isOpen={showModal}
+            onClose={() => {
+              fadeOutAudio(modalSound)
+              setShowModal(false)
+            }}
+          >
             <motion.div
               className="p-6 rounded-2xl bg-white dark:bg-neutral-800 shadow-xl"
               style={{
