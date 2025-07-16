@@ -99,11 +99,9 @@ export function CharacterCard({ character }: Props) {
     }
   }
 
-  const handleModalKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "Escape") {
-      setShowModal(false)
-      fadeOutAudio(modalSound)
-    }
+  const handleCloseModal = () => {
+  fadeOutAudio(modalSound)
+  setTimeout(() => setShowModal(false), 300) 
   }
 
   return (
@@ -262,10 +260,7 @@ export function CharacterCard({ character }: Props) {
         {showModal && (
           <Modal
             isOpen={showModal}
-            onClose={() => {
-              fadeOutAudio(modalSound)
-              setShowModal(false)
-            }}
+            onClose={handleCloseModal}
           >
             <motion.div
               ref={modalRef}
