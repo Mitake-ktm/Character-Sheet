@@ -1,4 +1,4 @@
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Modal from "./Modal"
 import type { characters } from "../data/characters"
@@ -46,13 +46,15 @@ function fadeOutAudio(audio: HTMLAudioElement, duration = 500) {
   }, step)
 }
 
-
 export function CharacterCard({ character }: Props) {
   const [flipped, setFlipped] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const [rotate, setRotate] = useState({ x: 0, y: 0 })
   const [showParticles, setShowParticles] = useState(false)
   const cardRef = useRef<HTMLDivElement>(null)
+  const openButtonRef = useRef<HTMLButtonElement>(null)
+  const modalRef = useRef<HTMLDivElement>(null)
+
 
   const handleMouseMove = (e: React.MouseEvent) => {
     const card = cardRef.current
@@ -76,18 +78,48 @@ export function CharacterCard({ character }: Props) {
     await loadFull(main)
   }
 
+  const handleCardClick = () => {
+    setFlipped(!flipped)
+    flipSound.currentTime = 0
+    flipSound.play()
+  }
+
+  useEffect(() => {
+    if (showModal && modalRef.current) {
+      modalRef.current.focus()
+    }
+  }, [showModal])
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault()
+      setFlipped(!flipped)
+      flipSound.currentTime = 0
+      flipSound.play()
+    }
+  }
+
+  const handleModalKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "Escape") {
+      setShowModal(false)
+      fadeOutAudio(modalSound)
+    }
+  }
+
   return (
     <>
       <motion.div
         className="relative w-72 h-96 perspective rounded-3xl cursor-pointer overflow-hidden"
+        tabIndex={0}
+        aria-label={`Carte de ${character.name}`}
+        onKeyDown={handleKeyDown}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         onClick={() => {
-        setFlipped(!flipped)
-        flipSound.currentTime = 0
-        flipSound.play()
+          setFlipped(!flipped)
+          flipSound.currentTime = 0
+          flipSound.play()
         }}
-
         ref={cardRef}
         initial={{ opacity: 0, y: 40, scale: 0.9 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -102,7 +134,7 @@ export function CharacterCard({ character }: Props) {
             cardRef.current.style.boxShadow = `0 0 20px ${character.color}`
           setShowParticles(true)
         }}
-      >
+        >
         {showParticles && (
           <Particles
             id="tsparticles"
@@ -199,26 +231,27 @@ export function CharacterCard({ character }: Props) {
                 ))}
               </div>
             </div>
-            <button
-              className="mt-4 px-4 py-2 rounded-full text-sm transition-colors shadow"
-              onClick={(e) => {
+          <button
+            className="mt-4 px-4 py-2 rounded-full text-sm transition-colors shadow"
+            ref={openButtonRef}
+            onClick={(e) => {
               e.stopPropagation()
               setShowModal(true)
               modalSound.volume = 1
               modalSound.currentTime = 0
               modalSound.play()
-              }}
-              style={{
-                backgroundColor: character.color,
-                color: getContrastColor(character.color),
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = darkenColor(character.color, 0.15)
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = character.color
-              }}
-            >
+            }}
+            style={{
+              backgroundColor: character.color,
+              color: getContrastColor(character.color),
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = darkenColor(character.color, 0.15)
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = character.color
+            }}
+          >
               Voir plus
             </button>
           </div>
@@ -235,7 +268,12 @@ export function CharacterCard({ character }: Props) {
             }}
           >
             <motion.div
-              className="p-6 rounded-2xl bg-white dark:bg-neutral-800 shadow-xl"
+              ref={modalRef}
+              tabIndex={-1}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="modal-title"
+              className="p-6 rounded-2xl bg-white dark:bg-neutral-800 shadow-xl outline-none"
               style={{
                 border: `2px solid ${character.color}`,
                 boxShadow: `0 0 25px ${character.color}`,
@@ -245,7 +283,9 @@ export function CharacterCard({ character }: Props) {
               exit={{ opacity: 0, scale: 0.8 }}
               transition={{ duration: 0.3 }}
             >
-              <h2 className="text-xl font-bold mb-2">{character.name}</h2>
+              <h2 id="modal-title" className="text-xl font-bold mb-2">
+                {character.name}
+              </h2>
               {character.pixelArt && (
                 <img
                   src={character.pixelArt}
@@ -258,7 +298,7 @@ export function CharacterCard({ character }: Props) {
                 <li><strong>Âge :</strong> {character.details.age}</li>
                 <li><strong>Taille :</strong> {character.details.size}</li>
               </ul>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 mt-2">
                 {character.details.personnality.map((trait) => (
                   <span
                     key={trait}
@@ -272,26 +312,6 @@ export function CharacterCard({ character }: Props) {
                   </span>
                 ))}
               </div>
-
-              {character.details.skills && character.details.skills.length > 0 && (
-              <div className="mt-4">
-                <h3 className="text-sm font-semibold mb-2">Compétences</h3>
-                <ul className="flex flex-wrap gap-2">
-                  {character.details.skills.map((skill) => (
-                    <li
-                      key={skill}
-                      className="bg-neutral-200 dark:bg-neutral-700 text-sm px-3 py-1 rounded-full"
-                      style={{
-                      backgroundColor: character.color,
-                      color: getContrastColor(character.color),
-                    }}
-                    >
-                      {skill}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
             </motion.div>
           </Modal>
         )}
