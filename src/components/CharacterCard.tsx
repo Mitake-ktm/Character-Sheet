@@ -4,6 +4,7 @@ import Modal from "./Modal"
 import type { characters } from "../data/characters"
 import Particles from "react-tsparticles"
 import { loadFull } from "tsparticles"
+import { isMobile } from "react-device-detect"
 
 type Props = {
   character: typeof characters[0]
@@ -204,6 +205,19 @@ export function CharacterCard({ character }: Props) {
             >
               « {character.quote} »
             </motion.p>
+            {isMobile && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation()
+                setFlipped((prev) => !prev)
+                flipSound.currentTime = 0
+                flipSound.play()
+              }}
+              className="absolute bottom-4 right-4 px-3 py-1 text-sm rounded-md bg-white/80 text-black shadow hover:bg-white transition"
+            >
+              Retourner
+            </button>
+          )}
           </div>
 
           {/* Back */}
