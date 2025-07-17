@@ -8,16 +8,34 @@ body {
   font-family: 'Noto Serif JP', serif;
 }
 
-
 .perspective {
   perspective: 1000px;
 }
 
 .backface-hidden {
   backface-visibility: hidden;
-  transform-style: preserve-3d;
+  -webkit-backface-visibility: hidden;
 }
 
 .rotate-y-180 {
   transform: rotateY(180deg);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
 }
