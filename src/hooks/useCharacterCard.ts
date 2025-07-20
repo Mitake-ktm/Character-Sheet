@@ -29,10 +29,11 @@ export function useCharacterCard() {
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
     
-    setRotate({
-      x: ((y - centerY) / centerY) * -10,
-      y: ((x - centerX) / centerX) * 10
-    });
+    // Effet plus prononcé sur les bords
+    const rotateX = ((y - centerY) / centerY) * -15;
+    const rotateY = ((x - centerX) / centerX) * 15;
+    
+    setRotate({ x: rotateX, y: rotateY });
   };
 
   const handleMouseLeaveHook = () => {

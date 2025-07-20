@@ -43,16 +43,15 @@ export function CharacterCard({ character }: Props) {
     playSound(modalSound, 1);
   };
 
-  // Gestion personnalisée du survol pour restaurer l'effet original
   const handleMouseEnter = () => {
     if (cardRef.current) {
-      cardRef.current.style.boxShadow = `0 0 20px ${character.color}`;
+      cardRef.current.style.boxShadow = `0 0 25px ${character.color}`;
     }
     setShowParticles(true);
   };
 
   const handleMouseLeave = () => {
-    handleMouseLeaveHook(); // Appelle la fonction du hook
+    handleMouseLeaveHook();
     if (cardRef.current) {
       cardRef.current.style.boxShadow = `0 0 0 rgba(0,0,0,0)`;
     }
@@ -97,7 +96,7 @@ export function CharacterCard({ character }: Props) {
         >
           {/* Front Card */}
           <div 
-            className="absolute w-full h-full backface-hidden"
+            className="absolute w-full h-full backface-hidden rounded-[20px]"
             style={{ 
               zIndex: flipped ? 1 : 2,
               transform: 'rotateY(0deg)'
@@ -113,7 +112,7 @@ export function CharacterCard({ character }: Props) {
           
           {/* Back Card */}
           <div 
-            className="absolute w-full h-full backface-hidden"
+            className="absolute w-full h-full backface-hidden rounded-[20px]"
             style={{ 
               zIndex: flipped ? 2 : 1,
               transform: 'rotateY(180deg)'
