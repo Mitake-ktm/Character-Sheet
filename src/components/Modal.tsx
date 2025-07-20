@@ -124,11 +124,20 @@ export default function Modal({ isOpen, onClose, innerRef, character }: ModalPro
                 {character.details.skills && character.details.skills.length > 0 && (
                   <li className="mt-3">
                     <span className="font-semibold">Compétences :</span>
-                    <ul className="list-disc list-inside ml-4 mt-1">
+                    <div className="flex flex-wrap gap-2 mt-2">
                       {character.details.skills.map((skill) => (
-                        <li key={skill}>{skill}</li>
+                        <span
+                          key={skill}
+                          className="px-3 py-1 text-sm rounded-full font-medium"
+                          style={{
+                            backgroundColor: character.color,
+                            color: getContrastColor(character.color),
+                          }}
+                        >
+                          {skill}
+                        </span>
                       ))}
-                    </ul>
+                    </div>
                   </li>
                 )}
               </ul>

@@ -12,7 +12,7 @@ export const characters = [
       age: "16 ans",
       size: "1m71",
       personnality: ["Introverti", "Curieux", "Tourmenté"],
-      skills: ["Aucun"]
+      skills: ["Aucune"]
     },
     particle: {
       shape: "circle",

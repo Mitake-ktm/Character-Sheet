@@ -60,7 +60,7 @@ export function CharacterCard({ character }: Props) {
   return (
     <>
       <motion.div
-        className="relative w-72 h-96 perspective rounded-3xl cursor-pointer overflow-visible"
+        className="relative w-72 h-96 perspective rounded-3xl cursor-pointer overflow-visible box-border"
         tabIndex={0}
         aria-label={`Carte de ${character.name}`}
         onKeyDown={handleKeyDown}
@@ -87,8 +87,8 @@ export function CharacterCard({ character }: Props) {
 
         <motion.div
           animate={{
-            rotateX: rotate.x,
-            rotateY: flipped ? 180 : 0,
+          rotateX: rotate.x,
+          rotateY: rotate.y + (flipped ? 180 : 0),
           }}
           transition={{ type: "spring", stiffness: 200, damping: 15 }}
           className="relative w-full h-full"
